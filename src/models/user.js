@@ -18,7 +18,37 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  licenseNumber: {
+    type: Number,
+    required: true
+  },
+  stateOfLicense: {
+    type: String,
+  },
+  dataRatesMsg: {
+    type: Boolean,
+  },
+  phoneNumber: {
+    type: String,
+  },
+  practiceAreas: {
+    type: Array
+  },
+  firmAssociation: {
+    type: String
+  },
+  isCurrentlyInvolved: {
+    type: Boolean,
+  },
+  terms: {
+    type: Boolean,
+  },
+  channels: {
+    type: Array,
   }
+
+
 })
 
 module.exports = mongoose.model('User', userSchema)
