@@ -1,16 +1,17 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
-const User = require('../models/auth')
+const { JWT_KEY } = require('../../config/keys')
+const User = require('../../models/user')
 
 const resolver = {
 
   createUser: async (args) => {
-    const isExistingUser = await User.findOne({ email: args.userInput.email })
+    const { email, password } = args.userInput
+    const isExistingUser = await User.findOne({ email })
     if (isExistingUser){
       throw new Error ('User already exist')
     }
-    const passwordEncryption = await bcrypt.hash(args.userInput.password, 12)
+    const passwordEncryption = await bcrypt.hash(password, 12)
 
     const user = new User({
       firstName: args.userInput.firstName,
@@ -24,7 +25,7 @@ const resolver = {
   },
   
   login: async ({ email, password}) => {
-    const user = await User.findOne({ email: email })
+    const user = await User.findOne({ email })
     if (!user){
       throw new Error ('User does not exist')
     }
@@ -32,8 +33,8 @@ const resolver = {
     if (!isEqual){
       throw new Error ('Password is incorrect')
     } 
-    const token = jwt.sign({ userId: user.id , email: user.email }, 'webtokenkey');
-    return { userId: user.id, token: token }
+    const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
+    return { userId: user.id, token }
   }
 }
 
