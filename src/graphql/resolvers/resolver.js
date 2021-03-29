@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const validator = require('validator')
 const { JWT_KEY } = require('../../config/keys')
 const User = require('../../models/user')
 
@@ -7,6 +8,9 @@ const resolver = {
 
   createUser: async (args) => {
     const { email, password } = args.userInput
+    if (!validator.isEmail(email)){
+      throw new Error('Invalid email format')
+    }
     const isExistingUser = await User.findOne({ email })
     if (isExistingUser){
       throw new Error ('User already exist')
