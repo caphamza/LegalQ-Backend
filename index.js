@@ -1,11 +1,18 @@
+require('dotenv').config()
 const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const mongoose = require('mongoose')
-const { MONGO_URI } = require('./config/keys')
-const schema = require('./src/graphql/schema')
-const resolver = require('./src/graphql/resolver')
+const { MONGO_URI } = require('./src/config/keys')
+const schema = require('./src/graphql/schema/schema')
+const resolver = require('./src/graphql/resolvers/resolver')
 
-mongoose.connect(MONGO_URI, { useNewUrlParser : true }, err => {
+
+mongoose.connect(MONGO_URI, { 
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  useNewUrlParser: true }, err => {
   if (err){
     console.log(err)
   } else {
