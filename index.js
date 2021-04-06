@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const { MONGO_URI } = require('./src/config/keys')
 const schema = require('./src/graphql/schema/schema')
 const resolver = require('./src/graphql/resolvers/resolver')
+const isAuth = require('./src/middlewares/isAuth')
+const { request } = require('express')
 
 
 mongoose.connect(MONGO_URI, { 
@@ -22,11 +24,14 @@ mongoose.connect(MONGO_URI, {
 
 const app = express()
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  rootValue: resolver,
-  graphiql: true
-  }) 
+app.use('/graphql', graphqlHTTP((request) => {
+  return {
+    schema,
+    rootValue: resolver,
+    context: { auth: isAuth(request.headers) },
+    graphiql: true
+  }
+})
 );
 
 app.listen(4000, () => console.log('Server is up and running'))
