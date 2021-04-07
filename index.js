@@ -6,7 +6,6 @@ const { MONGO_URI } = require('./src/config/keys')
 const schema = require('./src/graphql/schema/schema')
 const resolver = require('./src/graphql/resolvers/resolver')
 const isAuth = require('./src/middlewares/isAuth')
-const { request } = require('express')
 
 
 mongoose.connect(MONGO_URI, { 
