@@ -46,7 +46,8 @@ const userSchema = new Schema({
   },
   channels: {
     type: Array,
-  }
+  },
+  cases
 
 
 })

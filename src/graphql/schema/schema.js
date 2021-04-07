@@ -3,26 +3,23 @@ const { buildSchema } = require ('graphql')
 const schema = buildSchema(`
   type Login {
     token: String!
-    user: UserStep4 ,
+    user: UserStep4,
   } 
 
   type Data {
-    user: UserStep4,
-    ratings: [Rating]
-    cases: [Case] 
+    data: UserStep4
   }
 
   type User {
-    _id: ID!
     email: String!
     firstName: String!
     lastName: String!
     licenseNumber: Int!
     stateOfLicense: String!
+    token: String!
   }
 
   type UserStep1 {
-    _id: ID!
     email: String!
     firstName: String!
     lastName: String!
@@ -33,7 +30,6 @@ const schema = buildSchema(`
   }
 
   type UserStep2 {
-    _id: ID!
     email: String!
     firstName: String!
     lastName: String!
@@ -46,7 +42,6 @@ const schema = buildSchema(`
   }
 
   type UserStep3 {
-    _id: ID!
     email: String!
     firstName: String!
     lastName: String!
@@ -61,7 +56,6 @@ const schema = buildSchema(`
   }
 
   type UserStep4 {
-    _id: ID!
     email: String!
     firstName: String!
     lastName: String!
@@ -132,19 +126,16 @@ const schema = buildSchema(`
   }
 
   input UserInputStep2 {
-    email: String!
     practiceAreas: [String!]
     firmAssociation: String
   }
 
   input UserInputStep3 {
-    email: String!
     isCurrentlyInvolved: Boolean
     terms: Boolean!
   }
 
   input UserInputStep4 {
-    email: String!
     channels: [String!]
   }
 
@@ -183,7 +174,7 @@ const schema = buildSchema(`
 
   type RootQuery {
     login(email: String!, password: String!, mode: String): Login!
-    getData(_id: String): Data!
+    getData: Data!
   }
 
   type RootMutation {

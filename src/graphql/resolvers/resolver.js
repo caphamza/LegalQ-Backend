@@ -33,14 +33,19 @@ const resolver = {
       licenseNumber,
       stateOfLicense
     })
-
     const result = await user.save()
+    const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
+    result.token = token
     return result
   },
 
-  createUserStep1: async(args) => {
-    const { email, firstName, lastName, phoneNumber, dataRatesMsg = false , licenseNumber, stateOfLicense} = args.userInput
-    const result = await User.findOneAndUpdate({ email }, {
+  createUserStep1: async(args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
+    const { firstName, lastName, phoneNumber, dataRatesMsg = false , licenseNumber, stateOfLicense } = args.userInput
+    const result = await User.findOneAndUpdate({ _id: auth }, {
       firstName,
       lastName, 
       phoneNumber,
@@ -51,30 +56,42 @@ const resolver = {
     return result
   },
 
-  createUserStep2: async(args) => {
-    const { practiceAreas, firmAssociation, email } = args.userInput
-    const result = await User.findOneAndUpdate({ email }, {
+  createUserStep2: async(args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
+    const { practiceAreas, firmAssociation } = args.userInput
+    const result = await User.findOneAndUpdate({ _id: auth }, {
       practiceAreas,
       firmAssociation
     }, { new: true })
     return result
   },
   
-  createUserStep3: async(args) => {
-    const { isCurrentlyInvolved, terms, email } = args.userInput
-    const result = await User.findOneAndUpdate({ email }, {
+  createUserStep3: async(args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
+    const { isCurrentlyInvolved, terms } = args.userInput
+    const result = await User.findOneAndUpdate({ _id: auth }, {
       isCurrentlyInvolved,
       terms
     }, { new: true })
     return result
   },
 
-  createUserStep4: async(args) => {
-    const { channels, email} = args.userInput
+  createUserStep4: async(args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
+    const { channels } = args.userInput
     if (channels.length === 0){
       throw new Error ('Please select atleast 1 channel of communication')
     }
-    const result = await User.findOneAndUpdate({ email }, {
+    const result = await User.findOneAndUpdate({ _id: auth }, {
       channels
     }, { new: true })
     return result
@@ -94,15 +111,14 @@ const resolver = {
       attorneyId: auth
     })
     const result = await rating.save()
-    await User.findByIdAndUpdate(auth, {
-      $push: { earnings: [result._id]}
+    await User.findByIdAndUpdate({ _id: auth} , {
+      $push: { ratings: [result._id]}
     })
     return result
   },
 
   createCase: async (args, context) => {
     const { auth } = context
-    console.log('Con3', auth)
     if (!auth){
       throw new Error('unathorized')
     }
@@ -122,7 +138,11 @@ const resolver = {
     return result
   },
 
-  createConsultation: async (args) => {
+  createConsultation: async (args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
     const { 
       connectionMethod,
       dateTimeOccurred,
@@ -154,7 +174,11 @@ const resolver = {
     return result
   },
 
-  createClient: async (args) => {
+  createClient: async (args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    }
     const { firstName, lastName, quickBloxId } = args.input
     const client = Client({
       firstName,
@@ -165,23 +189,11 @@ const resolver = {
     return result
   },
 
-  login: async ({ email, password, mode }) => {
-    let user
-    if (mode === 'cases'){
-      user = await User.findOne({ email })
-      .populate({ path: 'cases', model: 'Case'})
-    } else if (mode === 'ratings'){
-      user = await User.findOne({ email })
-      .populate({ path: 'ratings', model: 'Rating'})
-    } else if (mode === 'consultations'){
-      user = await User.findOne({ email })
-      .populate({ path: 'consultations', model: 'Consultation'})
-    } else {
-      user = await User.findOne({ email })
-      .populate({ path: 'cases', model: 'Case'})
-      .populate({ path: 'ratings', model: 'Rating'})
-      .populate({ path: 'consultations', model: 'Consultation'})
-    }
+  login: async ({ email, password }) => {
+    const user = await User.findOne({ email })
+    .populate({ path: 'cases', model: 'Case'})
+    .populate({ path: 'ratings', model: 'Rating'})
+    .populate({ path: 'consultations', model: 'Consultation'}).exec()
     if (!user){
       throw new Error ('User does not exist')
     }
@@ -196,6 +208,22 @@ const resolver = {
     }
   },
 
+  getData: async (args, context) => {
+    const { auth } = context
+    if (!auth){
+      throw new Error ('unauthorized')
+    } 
+    const data = User.findOne({ _id: auth })
+    .populate({ path: 'cases', model: 'Case'})
+    .populate({ path: 'ratings', model: 'Rating'})
+    .populate({ path: 'consultations', model: 'Consultation'})
+    if (!data){
+      throw new Error('User does not exist')
+    }
+    return{
+      data
+    }
+  },
 }
 
 module.exports = resolver
