@@ -189,7 +189,8 @@ const resolver = {
     return result
   },
 
-  login: async ({ email, password }) => {
+  login: async ({ email, password }, context ) => {
+    const { res } = context
     const user = await User.findOne({ email })
     .populate({ path: 'cases', model: 'Case'})
     .populate({ path: 'ratings', model: 'Rating'})
@@ -201,7 +202,12 @@ const resolver = {
     if (!isEqual){
       throw new Error ('Password is incorrect')
     }
+    console.log('Res', res.cookie)
     const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 7
+    })
     return { 
       token,  
       user

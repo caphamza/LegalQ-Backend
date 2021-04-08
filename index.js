@@ -23,11 +23,11 @@ mongoose.connect(MONGO_URI, {
 
 const app = express()
 
-app.use('/graphql', graphqlHTTP((request) => {
+app.use('/graphql', graphqlHTTP((req, res) => {
   return {
     schema,
     rootValue: resolver,
-    context: { auth: isAuth(request.headers) },
+    context: { auth: isAuth(req.headers), res },
     graphiql: true
   }
 })
