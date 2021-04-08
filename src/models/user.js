@@ -46,9 +46,23 @@ const userSchema = new Schema({
   },
   channels: {
     type: Array,
+  },
+  ratings: [{
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Rating"
+  }],
+  cases: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Case'
+  }],
+  consultations: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Consultation'
+  },
+  clients: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Client'
   }
-
-
 })
 
 module.exports = mongoose.model('User', userSchema)
