@@ -20,16 +20,24 @@ const userSchema = new Schema({
     required: true
   },
   licenseNumber: {
-    type: Number,
+    type: String,
     required: true
   },
-  stateOfLicense: {
+  state: {
     type: String,
   },
-  dataRatesMsg: {
-    type: Boolean,
+  code: {
+    type: Number,
   },
-  phoneNumber: {
+  verify: {
+    type: Boolean,
+    default: false
+  },
+  phoneNumberUsageConsent: {
+    type: Boolean,
+    default: false
+  },
+  cellPhone: {
     type: String,
   },
   practiceAreas: {
@@ -38,13 +46,13 @@ const userSchema = new Schema({
   firmAssociation: {
     type: String
   },
-  isCurrentlyInvolved: {
+  investigations: {
     type: Boolean,
   },
-  terms: {
+  tos: {
     type: Boolean,
   },
-  channels: {
+  commMethods: {
     type: Array,
   },
   ratings: [{
