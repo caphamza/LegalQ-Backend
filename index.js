@@ -1,7 +1,9 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const { graphqlHTTP } = require('express-graphql')
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 const { MONGO_URI } = require('./src/config/keys')
 const schema = require('./src/graphql/schema/schema')
 const resolver = require('./src/graphql/resolvers/resolver')
@@ -23,11 +25,16 @@ mongoose.connect(MONGO_URI, {
 
 const app = express()
 
+app.use(cors({
+  credentials: true,
+  origin: "http://localhost:3000",
+}))
+app.use(cookieParser())
 app.use('/graphql', graphqlHTTP((req, res) => {
   return {
     schema,
     rootValue: resolver,
-    context: { auth: isAuth(req.headers), res },
+    context: { auth: isAuth(req.cookies), res, req },
     graphiql: true
   }
 })
