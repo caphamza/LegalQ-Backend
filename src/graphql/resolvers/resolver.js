@@ -11,49 +11,82 @@ const Client = require('../../models/client')
 
 const resolver = {
 
-  createUser: async (args) => {
-    const { email, password, firstName, lastName, licenseNumber, stateOfLicense  } = args.userInput
-    if (!validator.isEmail(email)){
-      throw new Error('Invalid email format')
+  createUser: async (args, context) => {
+    const { res } = context
+    try {
+      const { email, password, firstName, lastName, licenseNumber, state  } = args.userInput
+      if (!validator.isEmail(email)){
+        throw new Error('Invalid email format')
+      }
+      if (password.length < 8){
+        throw new Error('Password should be atleast 8 characters')
+      }
+      const isExistingUser = await User.findOne({ email })
+      if (isExistingUser){
+        throw new Error ('User already exist')
+      }
+      const passwordEncryption = await bcrypt.hash(password, 12)
+      const code = Math.round(Math.random()*(999999-111111)+111111)
+
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        firstName,
+        lastName,
+        email,
+        password: passwordEncryption,
+        licenseNumber,
+        state,
+        code,
+      })
+      const result = await user.save()
+      const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
+      res.cookie("toki", token)
+      return result
+    } catch (e) {
+      console.log('Error', e)
+      throw new Error ('Something went wrong')
     }
-    if (password.length < 8){
-      throw new Error('Password should be atleast 8 characters')
+  },
+
+  verifyEmail: async({ code }, context) => {
+    const { auth } = context
+    if (!auth) {
+      throw new Error ('unauthorized')
     }
-    const isExistingUser = await User.findOne({ email })
-    if (isExistingUser){
-      throw new Error ('User already exist')
+    if (!code) {
+      throw new Error ('verification code missing')
     }
-    const passwordEncryption = await bcrypt.hash(password, 12)
-    const user = new User({
-      _id: new mongoose.Types.ObjectId(),
-      firstName,
-      lastName,
-      email,
-      password: passwordEncryption,
-      licenseNumber,
-      stateOfLicense
-    })
-    const result = await user.save()
-    const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
-    result.token = token
-    return result
+    const result = await User.findOne({ _id: auth })
+    if (result.code != code){
+      throw new Error('Invalid Code')
+    }
+    const res = await User.findOneAndUpdate({ _id: auth }, {
+      verify: true
+    }, {new: true})
+    return res
   },
 
   createUserStep1: async(args, context) => {
-    const { auth } = context
-    if (!auth){
-      throw new Error ('unauthorized')
+    try {
+      const { auth } = context
+      if (!auth){
+        throw new Error ('unauthorized')
+      }
+      const { firstName, lastName, cellPhone, phoneNumberUsageConsent = false , licenseNumber, state } = args.userInput
+      const result = await User.findOneAndUpdate({ _id: auth }, {
+        firstName,
+        lastName, 
+        cellPhone,
+        phoneNumberUsageConsent,
+        licenseNumber,
+        state
+      }, {new: true})
+      return result
+    } catch (e) {
+      console.log('Err', e)
+      throw new Error ('Something went wrong')
     }
-    const { firstName, lastName, phoneNumber, dataRatesMsg = false , licenseNumber, stateOfLicense } = args.userInput
-    const result = await User.findOneAndUpdate({ _id: auth }, {
-      firstName,
-      lastName, 
-      phoneNumber,
-      dataRatesMsg,
-      licenseNumber,
-      stateOfLicense
-    }, {new: true})
-    return result
+    
   },
 
   createUserStep2: async(args, context) => {
@@ -74,10 +107,10 @@ const resolver = {
     if (!auth){
       throw new Error ('unauthorized')
     }
-    const { isCurrentlyInvolved, terms } = args.userInput
+    const { investigations, tos } = args.userInput
     const result = await User.findOneAndUpdate({ _id: auth }, {
-      isCurrentlyInvolved,
-      terms
+      investigations,
+      tos
     }, { new: true })
     return result
   },
@@ -87,12 +120,12 @@ const resolver = {
     if (!auth){
       throw new Error ('unauthorized')
     }
-    const { channels } = args.userInput
-    if (channels.length === 0){
+    const { commMethods } = args.userInput
+    if (commMethods.length === 0){
       throw new Error ('Please select atleast 1 channel of communication')
     }
     const result = await User.findOneAndUpdate({ _id: auth }, {
-      channels
+      commMethods
     }, { new: true })
     return result
   },
@@ -202,7 +235,6 @@ const resolver = {
     if (!isEqual){
       throw new Error ('Password is incorrect')
     }
-    console.log('Res', res.cookie)
     const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
     res.cookie("token", token, {
       httpOnly: true,

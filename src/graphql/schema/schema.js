@@ -14,29 +14,30 @@ const schema = buildSchema(`
     email: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
-    token: String!
+    licenseNumber: String!
+    state: String!
+    verify: Boolean,
+    code: Int
   }
 
   type UserStep1 {
     email: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
+    licenseNumber: String!
+    state: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
   }
 
   type UserStep2 {
     email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
     practiceAreas: [String!]
     firmAssociation: String
   }
@@ -45,41 +46,39 @@ const schema = buildSchema(`
     email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
     practiceAreas: [String!]
     firmAssociation: String
-    isCurrentlyInvolved: String
-    terms: String
+    investigations: Boolean
+    tos: String
   }
 
   type UserStep4 {
     email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
     practiceAreas: [String!]
     firmAssociation: String
-    isCurrentlyInvolved: String
-    terms: String
-    channels: [String]
+    investigations: Boolean
+    tos: String
+    commMethods: [String]
     ratings: [Rating]
     consultations: [Consultation]
     cases: [Case]
   }
-
   type Rating {
     overallScore: Int!
     friendlinessScore: Int
     knowledgeScore: Int
     feedbackText: String 
   }
-
   type Case {
     venueState: String
     legalAdviceDescription: String
@@ -111,18 +110,17 @@ const schema = buildSchema(`
     password: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    licenseNumber: String!
+    state: String!
   }
 
   input UserInputStep1 {
-    email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
   }
 
   input UserInputStep2 {
@@ -131,12 +129,12 @@ const schema = buildSchema(`
   }
 
   input UserInputStep3 {
-    isCurrentlyInvolved: Boolean
-    terms: Boolean!
+    investigations: Boolean
+    tos: Boolean!
   }
 
   input UserInputStep4 {
-    channels: [String!]
+    commMethods: [String!]
   }
 
   input RatingInput {
@@ -179,6 +177,7 @@ const schema = buildSchema(`
 
   type RootMutation {
     createUser(userInput: UserInput) : User
+    verifyEmail(code: String!): User
     createUserStep1(userInput: UserInputStep1): UserStep1
     createUserStep2(userInput: UserInputStep2): UserStep2
     createUserStep3(userInput: UserInputStep3): UserStep3
