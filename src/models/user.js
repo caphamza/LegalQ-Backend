@@ -49,11 +49,18 @@ const userSchema = new Schema({
   investigations: {
     type: Boolean,
   },
+  currentProfessionalResponsibilityInvestigations: {
+    type: String
+  },
   tos: {
     type: Boolean,
   },
   commMethods: {
     type: Array,
+  },
+  approved: {
+    type: Boolean,
+    default: false
   },
   ratings: [{
     type: [mongoose.Schema.Types.ObjectId],

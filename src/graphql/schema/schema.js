@@ -53,7 +53,8 @@ const schema = buildSchema(`
     practiceAreas: [String!]
     firmAssociation: String
     investigations: Boolean
-    tos: String
+    currentProfessionalResponsibilityInvestigations: String
+    tos: Boolean
   }
 
   type UserStep4 {
@@ -64,11 +65,14 @@ const schema = buildSchema(`
     cellPhone: String!
     licenseNumber: String!
     state: String!
+    verify: Boolean
     practiceAreas: [String!]
     firmAssociation: String
     investigations: Boolean
+    currentProfessionalResponsibilityInvestigations: String
     tos: String
     commMethods: [String]
+    approved: Boolean
     ratings: [Rating]
     consultations: [Consultation]
     cases: [Case]
@@ -130,7 +134,8 @@ const schema = buildSchema(`
 
   input UserInputStep3 {
     investigations: Boolean
-    tos: Boolean!
+    tos: Boolean!,
+    currentProfessionalResponsibilityInvestigations: String
   }
 
   input UserInputStep4 {
@@ -171,11 +176,12 @@ const schema = buildSchema(`
   }
 
   type RootQuery {
-    login(email: String!, password: String!, mode: String): Login!
     getData: Data!
   }
 
   type RootMutation {
+    login(email: String!, password: String!, mode: String): Login!
+    getData: Data!
     createUser(userInput: UserInput) : User
     verifyEmail(code: String!): User
     createUserStep1(userInput: UserInputStep1): UserStep1

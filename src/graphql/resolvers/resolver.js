@@ -40,7 +40,13 @@ const resolver = {
       })
       const result = await user.save()
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
-      res.cookie("toki", token)
+      res.cookie("toki", token, {
+        httpOnly: true,
+        maxAge: 1000 * 60
+      })
+      res.cookie('authenticated', true, {
+        maxAge: 1000 * 60 * 60
+      })
       return result
     } catch (e) {
       console.log('Error', e)
@@ -48,6 +54,8 @@ const resolver = {
     }
   },
 
+
+  
   verifyEmail: async({ code }, context) => {
     const { auth } = context
     if (!auth) {
@@ -107,9 +115,10 @@ const resolver = {
     if (!auth){
       throw new Error ('unauthorized')
     }
-    const { investigations, tos } = args.userInput
+    const { investigations, tos, currentProfessionalResponsibilityInvestigations } = args.userInput
     const result = await User.findOneAndUpdate({ _id: auth }, {
       investigations,
+      currentProfessionalResponsibilityInvestigations,
       tos
     }, { new: true })
     return result
@@ -236,9 +245,12 @@ const resolver = {
       throw new Error ('Password is incorrect')
     }
     const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
-    res.cookie("token", token, {
+    res.cookie("toki", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 7
+    })
+    res.cookie('authenticated', true, {
+      maxAge: 1000 * 60 * 60
     })
     return { 
       token,  
