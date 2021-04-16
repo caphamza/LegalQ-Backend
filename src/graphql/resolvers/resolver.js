@@ -16,14 +16,14 @@ const resolver = {
     try {
       const { email, password, firstName, lastName, licenseNumber, state  } = args.userInput
       if (!validator.isEmail(email)){
-        throw new Error('Invalid email format')
+        return Error ('Invalid email format')
       }
       if (password.length < 8){
-        throw new Error('Password should be atleast 8 characters')
+        return Error ('Password should be atleast 8 characters')
       }
       const isExistingUser = await User.findOne({ email })
       if (isExistingUser){
-        throw new Error ('User already exist')
+        return Error ('User already exist')
       }
       const passwordEncryption = await bcrypt.hash(password, 12)
       const code = Math.round(Math.random()*(999999-111111)+111111)
@@ -49,15 +49,7 @@ const resolver = {
       })
       return result
     } catch (e) {
-      if (e == 'Error: User already exist')
-        throw new Error ('User already exist')
-      else if (e == 'Error: Invalid email format')
-        throw new Error ('Invalid email format')
-      else if (e == 'Error: Password should be atleast 8 characters')
-        throw new Error ('Password should be atleast 8 characters')
-      else 
-        throw new Error ('something went wrong')
-
+      return Error ('something went wrong')
     }
   },
 
