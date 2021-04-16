@@ -58,15 +58,15 @@ const schema = buildSchema(`
   }
 
   type UserStep4 {
-    email: String!
-    firstName: String!
-    lastName: String!
+    email: String
+    firstName: String
+    lastName: String
     phoneNumberUsageConsent: Boolean
-    cellPhone: String!
-    licenseNumber: String!
-    state: String!
+    cellPhone: String
+    licenseNumber: String
+    state: String
     verify: Boolean
-    practiceAreas: [String!]
+    practiceAreas: [String]
     firmAssociation: String
     investigations: Boolean
     currentProfessionalResponsibilityInvestigations: String

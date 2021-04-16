@@ -42,15 +42,22 @@ const resolver = {
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
       res.cookie("toki", token, {
         httpOnly: true,
-        maxAge: 1000 * 60
+        maxAge: 1000 * 60 * 60 * 24
       })
       res.cookie('authenticated', true, {
-        maxAge: 1000 * 60 * 60
+        maxAge: 1000 * 60 * 60 * 24
       })
       return result
     } catch (e) {
-      console.log('Error', e)
-      throw new Error ('Something went wrong')
+      if (e == 'Error: User already exist')
+        throw new Error ('User already exist')
+      else if (e == 'Error: Invalid email format')
+        throw new Error ('Invalid email format')
+      else if (e == 'Error: Password should be atleast 8 characters')
+        throw new Error ('Password should be atleast 8 characters')
+      else 
+        throw new Error ('something went wrong')
+
     }
   },
 
@@ -247,10 +254,10 @@ const resolver = {
     const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
     res.cookie("toki", token, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 7
+      maxAge: 1000 * 60 * 60 * 24 * 7
     })
     res.cookie('authenticated', true, {
-      maxAge: 1000 * 60 * 60
+      maxAge: 1000 * 60 * 60 * 24 * 7
     })
     return { 
       token,  
