@@ -39,6 +39,10 @@ const consultationSchema = Schema({
   attorneyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  payment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payment'
   }
 })
 

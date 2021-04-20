@@ -39,7 +39,7 @@ const schema = buildSchema(`
     licenseNumber: String!
     state: String!
     practiceAreas: [String!]
-    firmAssociation: String
+    firmAssociation: String,
   }
 
   type UserStep3 {
@@ -76,6 +76,8 @@ const schema = buildSchema(`
     ratings: [Rating]
     consultations: [Consultation]
     cases: [Case]
+    payments: [Payment]
+
   }
   type Rating {
     overallScore: Int!
@@ -107,6 +109,12 @@ const schema = buildSchema(`
     firstName: String
     lastName: String
     quickBloxId: String
+  }
+
+  type Payment {
+    paymentMethod: String
+    amount: Int
+    calculatedAttorneyAmount: Int  
   }
 
   input UserInput {
@@ -175,6 +183,24 @@ const schema = buildSchema(`
     quickBloxId: String
   }
 
+  input update {
+    email: String
+    firstName: String
+    lastName: String
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String
+    licenseNumber: String
+    state: String
+    verify: Boolean
+    practiceAreas: [String]
+    firmAssociation: String
+    investigations: Boolean
+    currentProfessionalResponsibilityInvestigations: String
+    tos: String
+    commMethods: [String]
+    approved: Boolean
+  }
+
   type RootQuery {
     getData: Data!
   }
@@ -192,6 +218,7 @@ const schema = buildSchema(`
     createCase(input: CaseInput): Case
     createConsultation(input: ConsultationInput): Consultation
     createClient(input: ClientInput): Client
+    updateUser(userInput: update): UserStep4
   }
 
   schema {

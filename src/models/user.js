@@ -77,6 +77,10 @@ const userSchema = new Schema({
   clients: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Client'
+  },
+  payments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Payment'
   }
 })
 

@@ -10,14 +10,16 @@ const paymentSchema = Schema({
     type: Date
   },
   amount: {
-    type: Float32Array
+    type: Number
   },
   calculatedAttorneyAmount: {
-    type: Float32Array
+    type: Number
   },
-  stripeToken: {
-    type: String
-  },
+  attorneyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  }
 })
 
 module.exports = mongoose.model('Payment', paymentSchema)

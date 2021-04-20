@@ -8,6 +8,7 @@ const Rating = require('../../models/rating')
 const Case = require('../../models/case')
 const Consultation = require('../../models/consultations')
 const Client = require('../../models/client')
+const Payment = require ('../../models/payment')
 
 const resolver = {
 
@@ -302,19 +303,70 @@ const resolver = {
     }  
   },
 
+  updateUser: async (args, context) => {
+    const { auth } = context
+    try {
+      if (auth){
+        const {
+          email,
+          firstName,
+          lastName,
+          phoneNumberUsageConsent,
+          cellPhone,
+          licenseNumber,
+          state,
+          verify,
+          practiceAreas,
+          firmAssociation,
+          investigations,
+          currentProfessionalResponsibilityInvestigations,
+          tos,
+          commMethods
+        } = args.userInput
+  
+        const result = await User.findByIdAndUpdate(auth, {
+          email,
+          firstName,
+          lastName,
+          phoneNumberUsageConsent,
+          cellPhone,
+          licenseNumber,
+          state,
+          verify,
+          practiceAreas,
+          firmAssociation,
+          investigations,
+          currentProfessionalResponsibilityInvestigations,
+          tos,
+          commMethods
+        }, {new: true})
+  
+        return result
+    }
+    else return Error ('unauthorized')
+    
+    } catch (e) {
+      console.log('Err--', e)
+      return Error ('Something went wrong')
+    }
+
+  },
+
   getData: async (args, context) => {
     const { auth } = context
     try {
       if (!auth){
         return Error ('unauthorized')
       } 
-      const data = User.findOne({ _id: auth })
+      const data = await User.findOne({ _id: auth })
       .populate({ path: 'cases', model: 'Case'})
       .populate({ path: 'ratings', model: 'Rating'})
       .populate({ path: 'consultations', model: 'Consultation'})
+      .populate({ path: 'payment', model: 'Payment'})
       if (!data){
-        return Error('User does not exist')
+        return Error('User does not exist') 
       }
+
       return{
         data
       }
@@ -323,6 +375,7 @@ const resolver = {
       return Error ('something went wrong')
     }
   },
+
 }
 
 module.exports = resolver
