@@ -26,7 +26,7 @@ const ratingSchema = Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-  }
+  },
 })
 
 module.exports = mongoose.model('Rating', ratingSchema)

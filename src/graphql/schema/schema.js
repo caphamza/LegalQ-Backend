@@ -91,6 +91,7 @@ const schema = buildSchema(`
     areaOfLaw: String
     consultationConnectionMethod: String
     futureConsultationDateTime: String
+    rating: Rating
   }
 
   type Consultation {

@@ -30,8 +30,17 @@ const caseSchema = Schema({
     required: true,
   },
   rating: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Rating'
+    type: Object,
+    overallScore: {
+      type: Number,
+      required: true
+    },
+    friendlinessScore: {
+      type: Number
+    },
+    knowledgeScore: {
+      type: Number
+    },
   },
   payment: {
     type: mongoose.Schema.Types.ObjectId,

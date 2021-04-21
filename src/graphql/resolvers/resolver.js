@@ -372,6 +372,7 @@ const resolver = {
       }
     }
     catch (e) {
+      console.log('ERR', e)
       return Error ('something went wrong')
     }
   },
