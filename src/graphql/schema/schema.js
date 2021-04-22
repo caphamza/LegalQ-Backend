@@ -91,7 +91,11 @@ const schema = buildSchema(`
     areaOfLaw: String
     consultationConnectionMethod: String
     futureConsultationDateTime: String
+    time: String
+    length: String
     rating: Rating
+    payment: Payment
+    client: Client
   }
 
   type Consultation {
@@ -209,6 +213,7 @@ const schema = buildSchema(`
   type RootMutation {
     login(email: String!, password: String!, mode: String): Login!
     getData: Data!
+    getCases: [Case]
     createUser(userInput: UserInput) : User
     verifyEmail(code: String!): User
     createUserStep1(userInput: UserInputStep1): UserStep1

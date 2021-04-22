@@ -18,11 +18,21 @@ const caseSchema = Schema({
   futureConsultationDateTime: {
     type: String
   },
+  length: {
+    type: String
+  },
+  time: {
+    type: String
+  },
   createdAt: {
     type: String
   },
   updatedAt: {
     type: String
+  },
+  client: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Client',
   },
   attorneyId: {
     type: mongoose.Schema.Types.ObjectId,

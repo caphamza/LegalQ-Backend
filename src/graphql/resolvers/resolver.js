@@ -377,6 +377,23 @@ const resolver = {
     }
   },
 
+  getCases: async (args, context) => {
+    const { auth } = context
+    try {
+      if (!auth){
+        return Error ('unauthorized')
+      } 
+      const data = await Case.find({ attorneyId: auth })
+      .populate({ path: 'payment', Model: 'Payment' })
+      .populate({ path: 'client', Model: 'Client'})
+      
+      return data
+    }
+    catch (e) {
+      return Error ('Something went wrong')
+    }
+  }
+
 }
 
 module.exports = resolver
