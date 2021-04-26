@@ -4,7 +4,7 @@ const cors = require('cors')
 const { graphqlHTTP } = require('express-graphql')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-const { MONGO_URI } = require('./src/config/keys')
+const { MONGO_URI, URL } = require('./src/config/keys')
 const schema = require('./src/graphql/schema/schema')
 const resolver = require('./src/graphql/resolvers/resolver')
 const isAuth = require('./src/middlewares/isAuth')
@@ -27,7 +27,7 @@ const app = express()
 
 app.use(cors({
   credentials: true,
-  origin: "http://localhost:3000",
+  origin: URL,
 }))
 app.use(cookieParser())
 app.use('/graphql', graphqlHTTP((req, res) => {
@@ -40,4 +40,4 @@ app.use('/graphql', graphqlHTTP((req, res) => {
 })
 );
 
-app.listen(4000, () => console.log('Server is up and running'))
+app.listen(process.env.PORT || 4000, () => console.log('Server is up and running'))
