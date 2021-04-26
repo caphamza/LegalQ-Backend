@@ -97,6 +97,7 @@ const schema = buildSchema(`
     payment: Payment
     client: Client
     consultation: Consultation
+    createdAt: String
   }
 
   type Consultation {
