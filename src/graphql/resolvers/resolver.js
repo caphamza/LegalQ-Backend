@@ -362,7 +362,7 @@ const resolver = {
       .populate({ path: 'cases', model: 'Case'})
       .populate({ path: 'ratings', model: 'Rating'})
       .populate({ path: 'consultations', model: 'Consultation'})
-      .populate({ path: 'payment', model: 'Payment'})
+      .populate({ path: 'payments', model: 'Payment'})
       if (!data){
         return Error('User does not exist') 
       }
@@ -386,7 +386,7 @@ const resolver = {
       const data = await Case.find({ attorneyId: auth })
       .populate({ path: 'payment', Model: 'Payment' })
       .populate({ path: 'client', Model: 'Client'})
-      
+      .populate({ path: 'consultation', model: 'Consultation'})
       return data
     }
     catch (e) {

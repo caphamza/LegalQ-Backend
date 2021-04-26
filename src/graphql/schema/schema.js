@@ -70,7 +70,7 @@ const schema = buildSchema(`
     firmAssociation: String
     investigations: Boolean
     currentProfessionalResponsibilityInvestigations: String
-    tos: String
+    tos: Boolean
     commMethods: [String]
     approved: Boolean
     ratings: [Rating]
@@ -96,6 +96,7 @@ const schema = buildSchema(`
     rating: Rating
     payment: Payment
     client: Client
+    consultation: Consultation
   }
 
   type Consultation {
@@ -107,7 +108,7 @@ const schema = buildSchema(`
     status: String
     clientPrefferedConnectionMethod: String
     purchasedLength: String
-    actualLength: String
+    actualLength: Int
   }
 
   type Client {
@@ -201,7 +202,7 @@ const schema = buildSchema(`
     firmAssociation: String
     investigations: Boolean
     currentProfessionalResponsibilityInvestigations: String
-    tos: String
+    tos: Boolean
     commMethods: [String]
     approved: Boolean
   }

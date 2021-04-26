@@ -55,7 +55,11 @@ const caseSchema = Schema({
   payment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Payment'
-  }
+  },
+  consultation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Consultation'
+  },
 })
 
 module.exports = mongoose.model('Case', caseSchema)

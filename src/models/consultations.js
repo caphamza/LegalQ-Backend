@@ -28,7 +28,7 @@ const consultationSchema = Schema({
     type: String
   },
   actualLength: {
-    type: String
+    type: Number
   },
   createdAt: {
     type: String
