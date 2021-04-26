@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_KEY } = require('../config/keys')
 
 module.exports = (req) => {
-  const authHeader = req['authorization'];
+  const authHeader = req.toki
   if (!authHeader){
     return false
   }

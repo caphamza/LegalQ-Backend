@@ -28,7 +28,7 @@ const consultationSchema = Schema({
     type: String
   },
   actualLength: {
-    type: String
+    type: Number
   },
   createdAt: {
     type: String
@@ -39,6 +39,10 @@ const consultationSchema = Schema({
   attorneyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  payment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payment'
   }
 })
 

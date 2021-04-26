@@ -14,78 +14,90 @@ const schema = buildSchema(`
     email: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
-    token: String!
+    licenseNumber: String!
+    state: String!
+    verify: Boolean,
+    code: Int
   }
 
   type UserStep1 {
     email: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
+    licenseNumber: String!
+    state: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
   }
 
   type UserStep2 {
     email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
     practiceAreas: [String!]
-    firmAssociation: String
+    firmAssociation: String,
   }
 
   type UserStep3 {
     email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
     practiceAreas: [String!]
     firmAssociation: String
-    isCurrentlyInvolved: String
-    terms: String
+    investigations: Boolean
+    currentProfessionalResponsibilityInvestigations: String
+    tos: Boolean
   }
 
   type UserStep4 {
-    email: String!
-    firstName: String!
-    lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
-    practiceAreas: [String!]
+    email: String
+    firstName: String
+    lastName: String
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String
+    licenseNumber: String
+    state: String
+    verify: Boolean
+    practiceAreas: [String]
     firmAssociation: String
-    isCurrentlyInvolved: String
-    terms: String
-    channels: [String]
+    investigations: Boolean
+    currentProfessionalResponsibilityInvestigations: String
+    tos: Boolean
+    commMethods: [String]
+    approved: Boolean
     ratings: [Rating]
     consultations: [Consultation]
     cases: [Case]
-  }
+    payments: [Payment]
 
+  }
   type Rating {
     overallScore: Int!
     friendlinessScore: Int
     knowledgeScore: Int
     feedbackText: String 
   }
-
   type Case {
     venueState: String
     legalAdviceDescription: String
     areaOfLaw: String
     consultationConnectionMethod: String
     futureConsultationDateTime: String
+    time: String
+    length: String
+    rating: Rating
+    payment: Payment
+    client: Client
+    consultation: Consultation
+    createdAt: String
   }
 
   type Consultation {
@@ -97,7 +109,7 @@ const schema = buildSchema(`
     status: String
     clientPrefferedConnectionMethod: String
     purchasedLength: String
-    actualLength: String
+    actualLength: Int
   }
 
   type Client {
@@ -106,23 +118,28 @@ const schema = buildSchema(`
     quickBloxId: String
   }
 
+  type Payment {
+    paymentMethod: String
+    amount: Int
+    calculatedAttorneyAmount: Int  
+  }
+
   input UserInput {
     email: String!
     password: String!
     firstName: String!
     lastName: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    licenseNumber: String!
+    state: String!
   }
 
   input UserInputStep1 {
-    email: String!
     firstName: String!
     lastName: String!
-    dataRatesMsg: Boolean
-    phoneNumber: String!
-    licenseNumber: Int!
-    stateOfLicense: String!
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String!
+    licenseNumber: String!
+    state: String!
   }
 
   input UserInputStep2 {
@@ -131,12 +148,13 @@ const schema = buildSchema(`
   }
 
   input UserInputStep3 {
-    isCurrentlyInvolved: Boolean
-    terms: Boolean!
+    investigations: Boolean
+    tos: Boolean!,
+    currentProfessionalResponsibilityInvestigations: String
   }
 
   input UserInputStep4 {
-    channels: [String!]
+    commMethods: [String!]
   }
 
   input RatingInput {
@@ -172,13 +190,34 @@ const schema = buildSchema(`
     quickBloxId: String
   }
 
+  input update {
+    email: String
+    firstName: String
+    lastName: String
+    phoneNumberUsageConsent: Boolean
+    cellPhone: String
+    licenseNumber: String
+    state: String
+    verify: Boolean
+    practiceAreas: [String]
+    firmAssociation: String
+    investigations: Boolean
+    currentProfessionalResponsibilityInvestigations: String
+    tos: Boolean
+    commMethods: [String]
+    approved: Boolean
+  }
+
   type RootQuery {
-    login(email: String!, password: String!, mode: String): Login!
     getData: Data!
   }
 
   type RootMutation {
+    login(email: String!, password: String!, mode: String): Login!
+    getData: Data!
+    getCases: [Case]
     createUser(userInput: UserInput) : User
+    verifyEmail(code: String!): User
     createUserStep1(userInput: UserInputStep1): UserStep1
     createUserStep2(userInput: UserInputStep2): UserStep2
     createUserStep3(userInput: UserInputStep3): UserStep3
@@ -187,6 +226,7 @@ const schema = buildSchema(`
     createCase(input: CaseInput): Case
     createConsultation(input: ConsultationInput): Consultation
     createClient(input: ClientInput): Client
+    updateUser(userInput: update): UserStep4
   }
 
   schema {

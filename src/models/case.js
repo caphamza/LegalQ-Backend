@@ -18,11 +18,21 @@ const caseSchema = Schema({
   futureConsultationDateTime: {
     type: String
   },
+  length: {
+    type: String
+  },
+  time: {
+    type: String
+  },
   createdAt: {
     type: String
   },
   updatedAt: {
     type: String
+  },
+  client: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Client',
   },
   attorneyId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -30,9 +40,26 @@ const caseSchema = Schema({
     required: true,
   },
   rating: {
+    type: Object,
+    overallScore: {
+      type: Number,
+      required: true
+    },
+    friendlinessScore: {
+      type: Number
+    },
+    knowledgeScore: {
+      type: Number
+    },
+  },
+  payment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Rating'
-  }
+    ref: 'Payment'
+  },
+  consultation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Consultation'
+  },
 })
 
 module.exports = mongoose.model('Case', caseSchema)
