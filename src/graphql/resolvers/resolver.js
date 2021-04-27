@@ -43,11 +43,9 @@ const resolver = {
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
       res.cookie("toki", token, {
         httpOnly: true,
-        domain: 'heroku.com',
         maxAge: 1000 * 60 * 60 * 24
       })
       res.cookie('authenticated', true, {
-        domain: 'heroku.com',
         maxAge: 1000 * 60 * 60 * 24
       })
       return result
@@ -290,11 +288,9 @@ const resolver = {
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
       res.cookie("toki", token, {
         httpOnly: true,
-        domain: 'heroku.com',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       res.cookie('authenticated', true, {
-        domain: 'heroku.com',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       return { 
