@@ -43,9 +43,13 @@ const resolver = {
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
       res.cookie("toki", token, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24
       })
       res.cookie('authenticated', true, {
+        secure: true,
+        sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24
       })
       return result
@@ -278,6 +282,8 @@ const resolver = {
       .populate({ path: 'cases', model: 'Case'})
       .populate({ path: 'ratings', model: 'Rating'})
       .populate({ path: 'consultations', model: 'Consultation'}).exec()
+
+      console.log("USER", user)
       if (!user){
         return Error ('User does not exist')
       }
@@ -288,15 +294,16 @@ const resolver = {
       const token = jwt.sign({ userId: user.id , email: user.email }, JWT_KEY);
       res.cookie("toki", token, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       res.cookie('authenticated', true, {
+        secure: true,
+        sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
-      return { 
-        token,  
-        user
-      }
+      return { user }
     }
     catch (e) {
       return Error ('something went wrong')
