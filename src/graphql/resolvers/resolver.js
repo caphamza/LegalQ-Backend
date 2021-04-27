@@ -48,7 +48,6 @@ const resolver = {
         maxAge: 1000 * 60 * 60 * 24
       })
       res.cookie('authenticated', true, {
-        secure: true,
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24
       })
@@ -299,7 +298,6 @@ const resolver = {
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
       res.cookie('authenticated', true, {
-        secure: true,
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
