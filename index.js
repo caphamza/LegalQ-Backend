@@ -31,7 +31,6 @@ app.use(cors({
 }))
 app.use(cookieParser())
 app.use('/graphql', graphqlHTTP((req, res) => {
-  console.log('Cooking-----------', req.cookies )
   return {
     schema,
     rootValue: resolver,

@@ -47,11 +47,7 @@ const resolver = {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24
       })
-      res.cookie('authenticated', true, {
-        sameSite: 'none',
-        maxAge: 1000 * 60 * 60 * 24
-      })
-      return result
+      return { result }
     } catch (e) {
       return Error ('something went wrong')
     }
@@ -282,7 +278,6 @@ const resolver = {
       .populate({ path: 'ratings', model: 'Rating'})
       .populate({ path: 'consultations', model: 'Consultation'}).exec()
 
-      console.log("USER", user)
       if (!user){
         return Error ('User does not exist')
       }
@@ -297,11 +292,10 @@ const resolver = {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
-      res.cookie('authenticated', true, {
-        sameSite: 'none',
-        maxAge: 1000 * 60 * 60 * 24 * 7
-      })
-      return { user }
+      return { 
+        user,
+        authenticated: true
+      }
     }
     catch (e) {
       return Error ('something went wrong')
@@ -345,7 +339,6 @@ const resolver = {
           tos,
           commMethods
         }, {new: true})
-  
         return result
     }
     else return Error ('unauthorized')
@@ -371,10 +364,7 @@ const resolver = {
       if (!data){
         return Error('User does not exist') 
       }
-
-      return{
-        data
-      }
+      return{ data }
     }
     catch (e) {
       console.log('ERR', e)
