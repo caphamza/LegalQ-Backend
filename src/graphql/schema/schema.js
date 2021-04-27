@@ -2,7 +2,6 @@ const { buildSchema } = require ('graphql')
 
 const schema = buildSchema(`
   type Login {
-    token: String!
     user: UserStep4,
   } 
 
