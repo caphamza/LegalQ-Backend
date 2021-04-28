@@ -47,8 +47,9 @@ const resolver = {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24
       })
-      return { result }
+      return result
     } catch (e) {
+      console.log('E', e)
       return Error ('something went wrong')
     }
   },
@@ -292,10 +293,7 @@ const resolver = {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7
       })
-      return { 
-        user,
-        authenticated: true
-      }
+      return { user }
     }
     catch (e) {
       return Error ('something went wrong')
